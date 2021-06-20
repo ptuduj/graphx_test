@@ -1,6 +1,6 @@
+import org.apache.spark.graphx.lib.TriangleCount
 import org.apache.spark.graphx.{Edge, Graph}
 import org.apache.spark.sql.SparkSession
-import org.graphframes.GraphFrame
 
 
 object Main extends App {
@@ -20,14 +20,19 @@ object Main extends App {
   //val vertices_ = vertices.map(row => (row.getString(0).toLong, (row.getString(1), row.getString(2).toLong)))
 
   val graph = Graph(vertices_, edges_)
+  val startTime1 = System.currentTimeMillis
+  //  val res = graph.triangleCount().vertices.collect()
+  //  res.foreach(println)
+  val res = TriangleCount.runPreCanonicalized(graph).vertices.collect()
+  println("hau Time: " + estimatedTime + " s")
 
-  val vertice_df = spark.createDataFrame(vertices_).toDF("id", "name")
-  val edges_df = spark.createDataFrame(edges_).toDF("src", "dst", "attr")
-  val g = GraphFrame(vertice_df, edges_df)
-  val startTime = System.currentTimeMillis
-  val res = g.triangleCount.run().collect()
-  val estimatedTime = (System.currentTimeMillis - startTime) / 1000.0
-  println("kot Time: " + estimatedTime + " s")
+//  val vertice_df = spark.createDataFrame(vertices_).toDF("id", "name")
+//  val edges_df = spark.createDataFrame(edges_).toDF("src", "dst", "attr")
+//  val g = GraphFrame(vertice_df, edges_df)
+//  val startTime = System.currentTimeMillis
+//  val res = g.triangleCount.run().collect()
+//  val estimatedTime = (System.currentTimeMillis - startTime) / 1000.0
+//  println("kot Time: " + estimatedTime + " s")
 
 
 }
